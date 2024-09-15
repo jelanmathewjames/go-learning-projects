@@ -26,8 +26,8 @@ bin/
 *.prof
 
 # If you're using Go modules
-/go.sum
-/go.work
+go.sum
+go.work
 
 # If you're using dep (old Go dependency manager)
 /vendor/
