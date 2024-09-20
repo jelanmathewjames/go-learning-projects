@@ -1,10 +1,9 @@
 package db
 
 import (
-	"gorm.io/gorm"
 	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
-
 
 func DBConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
@@ -14,7 +13,7 @@ func DBConnection() (*gorm.DB, error) {
 	return db, nil
 }
 
-func Migrate(db *gorm.DB, models []&Interface{}) {
+func Migrate(db *gorm.DB, models ...interface{}) {
 	for _, model := range models {
 		db.AutoMigrate(model)
 	}
