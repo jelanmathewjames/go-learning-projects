@@ -1,15 +1,13 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
-func TodoRoutes(base *gin.RouterGroup) {
+func TodoRoutes(base *fiber.Group) {
 	todo := base.Group("/todo")
-	todo.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "list",
-		})
+	todo.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("I'm a GET request!")
 	})
 	// todo.POST("/", create)
 	// todo.GET("/", list)

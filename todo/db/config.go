@@ -12,9 +12,3 @@ func DBConnection() (*gorm.DB, error) {
 	}
 	return db, nil
 }
-
-func Migrate(db *gorm.DB, models ...interface{}) {
-	for _, model := range models {
-		db.AutoMigrate(model)
-	}
-}

@@ -1,12 +1,41 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
+	"os"
+
+	"todo/db"
 	"todo/routes"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
-	app := gin.Default()
+	arg := os.Args[1]
+	switch arg {
+	case "migrate":
+		Migrate()
+	case "runserver":
+		RunServer()
+	default:
+		panic("Invalid command")
+	}
+}
+
+func Migrate() {
+	session, err := db.DBConnection()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Connected to database")
+	err = db.MigrateDB(session)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func RunServer() {
+	app := fiber.New()
 	routes.SetupRouter(app)
-	app.Run(":8003")
+	app.Listen(":8003")
 }

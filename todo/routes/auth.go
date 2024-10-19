@@ -1,16 +1,14 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
+	"todo/controller"
+
+	"github.com/gofiber/fiber/v2"
 )
 
-func AuthRoutes(base *gin.RouterGroup) {
+func AuthRoutes(base *fiber.Group) error {
 	auth := base.Group("/auth")
-	auth.POST("/login", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "login",
-		})
-	})
-	// auth.POST("/login", login)
-	// auth.POST("/register", register)
+	auth.Post("/login", controller.Login)
+	auth.Post("/register", controller.Register)
+	return nil
 }

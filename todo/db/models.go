@@ -30,9 +30,6 @@ type Todo struct {
 	User      User      `gorm:"foreignKey:UserID;constraint:onUpdate:CASCADE,onDelete:CASCADE"`
 }
 
-func Models() []interface{} {
-	return []interface{}{
-		&User{},
-		&Todo{},
-	}
+func MigrateDB(db *gorm.DB) error {
+	return db.AutoMigrate(&User{}, &Todo{})
 }
