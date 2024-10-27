@@ -32,3 +32,5 @@ go.work
 # If you're using dep (old Go dependency manager)
 /vendor/
 /Gopkg.lock
+
+.env
