@@ -11,6 +11,9 @@ import (
 )
 
 func main() {
+	if len(os.Args) < 2 {
+		panic("No command provided")
+	}
 	arg := os.Args[1]
 	switch arg {
 	case "migrate":
