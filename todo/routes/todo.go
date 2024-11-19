@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"todo/controller"
 	"todo/middlewares"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,12 +10,8 @@ import (
 func TodoRoutes(base *fiber.Group) {
 	todo := base.Group("/todo")
 	todo.Use(middlewares.AuthMiddleware)
-	todo.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("I'm a GET request!")
-	})
-	// todo.POST("/", create)
-	// todo.GET("/", list)
-	// todo.GET("/:id", get)
-	// todo.PUT("/:id", update)
-	// todo.DELETE("/:id", delete)
+	todo.Get("/", controller.ListTodos)
+	todo.Post("/", controller.CreateTodo)
+	todo.Patch("/:id", controller.UpdateTodo)
+	todo.Delete("/:id", controller.DeleteTodo)
 }

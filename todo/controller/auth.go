@@ -16,37 +16,37 @@ func Login(c *fiber.Ctx) error {
 	var formated_data UserData
 	var user db.User
 	if err := c.BodyParser(&formated_data); err != nil {
-		return c.JSON(fiber.Map{
-			"message": err,
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Internal Server Error",
 		})
 	}
 	email := formated_data.Email
 	password := formated_data.Password
 	session, err := db.DBConnection()
 	if err != nil {
-		return c.JSON(fiber.Map{
-			"message": "Failed to connect to database",
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Internal Server Error",
 		})
 	}
 	if result := session.Where("email = ?", email).First(&user); result.Error == nil {
 		if err := util.ComparePassword(password, user.Password); err != nil {
-			return c.JSON(fiber.Map{
-				"message": "Invalid Password",
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"message": "Invalid Username or Password",
 			})
 		}
 		if token, err := util.GenerateToken(user.ID); err == nil {
-			return c.JSON(fiber.Map{
+			return c.Status(fiber.StatusOK).JSON(fiber.Map{
 				"message": "Login Successful",
 				"token":   token,
 			})
 		}
-		return c.JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Internal Server Error",
 		})
 
 	}
-	return c.JSON(fiber.Map{
-		"message": "User not found",
+	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		"message": "Invalid Username or Password",
 	})
 }
 
@@ -54,7 +54,7 @@ func Register(c *fiber.Ctx) error {
 	var formated_data UserData
 
 	if err := c.BodyParser(&formated_data); err != nil {
-		return c.JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err,
 		})
 	}
@@ -63,21 +63,21 @@ func Register(c *fiber.Ctx) error {
 
 	session, err := db.DBConnection()
 	if err != nil {
-		return c.JSON(fiber.Map{
-			"message": "Failed to connect to database",
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Internal Server Error",
 		})
 	}
 
 	hashed_password, err := util.HashPassword(password)
 	if err != nil {
-		return c.JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Internal Server Error",
 		})
 	}
 
 	session.Create(&db.User{Email: email, Password: hashed_password})
-	return c.JSON(fiber.Map{
-		"message": "Registered Successfully",
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message": "User Created",
 	})
 
 }
